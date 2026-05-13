@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Health AI</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .btn-predict { background-color: #0d6efd; border: none; padding: 12px; font-weight: bold; }
+        .result-box { border-radius: 10px; padding: 20px; margin-top: 20px; text-align: center; }
+        .bg-danger-custom { background-color: #ffeef0; color: #dc3545; border: 1px solid #dc3545; }
+        .bg-success-custom { background-color: #e6ffed; color: #28a745; border: 1px solid #28a745; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary">Heart AI Diagnostics</h2>
+                    <p class="text-muted">Enter patient vitals for real-time risk assessment</p>
+                </div>
+
+                <form action="/predict" method="POST">
+                    <div class="row g-3">
+                        <!-- Numerical Inputs -->
+                        <div class="col-md-6">
+                            <label class="form-label">Age</label>
+                            <input type="number" name="Age" class="form-control" placeholder="e.g. 45" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sex</label>
+                            <select name="Sex" class="form-select">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Resting BP (mm Hg)</label>
+                            <input type="number" name="RestingBP" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Cholesterol (mg/dl)</label>
+                            <input type="number" name="Cholesterol" class="form-control" required>
+                        </div>
+
+                        <!-- Categorical Dropdowns -->
+                        <div class="col-md-12">
+                            <label class="form-label">Chest Pain Type</label>
+                            <select name="ChestpainType" class="form-select">
+                                <option value="ATA">Atypical Angina (ATA)</option>
+                                <option value="NAP">Non-Anginal Pain (NAP)</option>
+                                <option value="ASY">Asymptomatic (ASY)</option>
+                                <option value="TA">Typical Angina (TA)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Fasting Blood Sugar</label>
+                            <select name="FastingBS" class="form-select">
+                                <option value="0">Below 120 mg/dl</option>
+                                <option value="1">Above 120 mg/dl</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Resting ECG</label>
+                            <select name="RestingECG" class="form-select">
+                                <option value="Normal">Normal</option>
+                                <option value="ST">ST Wave Abnormality</option>
+                                <option value="LVH">Left Ventricular Hypertrophy</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Max Heart Rate</label>
+                            <input type="number" name="MaxHR" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Exercise Angina</label>
+                            <select name="ExerciseAngina" class="form-select">
+                                <option value="N">No</option>
+                                <option value="Y">Yes</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Oldpeak (Depression)</label>
+                            <input type="number" step="0.1" name="Oldpeak" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">ST Slope</label>
+                            <select name="ST_Slope" class="form-select">
+                                <option value="Up">Up</option>
+                                <option value="Flat">Flat</option>
+                                <option value="Down">Down</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-predict btn-primary w-100">RUN DIAGNOSTIC</button>
+                        </div>
+                    </div>
+                </form>
+
+                {% if prediction_text %}
+                    <div class="result-box {% if 'Detected' in prediction_text %}bg-danger-custom{% else %}bg-success-custom{% endif %}">
+                        <h4 class="mb-0 fw-bold">{{ prediction_text }}</h4>
+                        <small>Based on KNN Classifier Assessment</small>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
